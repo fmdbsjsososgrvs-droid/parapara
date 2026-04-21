@@ -6,6 +6,18 @@
   <title>Family — DASOM's Blog</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    @keyframes heroFadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content {
+      opacity: 0;
+      animation: heroFadeIn 0.7s ease forwards;
+      animation-delay: 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+
     .filter-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -76,11 +88,13 @@
     <div class="deco-strip">✦ ✦ ✦ ✦ ✦</div>
 
     <div class="hero"><div class="hero-corner-br"></div>
-      <div class="hero-icon"><img src="slip.png" alt="Family" style="width:140px;height:auto;object-fit:contain;" /></div>
-      <h1>Family</h1>
-      <p>
-        다솜이의 편안한 우리집
-      </p>
+      <div class="hero-content">
+        <div class="hero-icon"><img src="slip.png" alt="Family" style="width:140px;height:auto;object-fit:contain;" /></div>
+        <h1>Family</h1>
+        <p>
+          다솜이의 편안한 우리집
+        </p>
+      </div>
     </div>
 
     <!-- 카테고리 필터 -->
