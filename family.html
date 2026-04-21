@@ -49,7 +49,8 @@
     .filter-icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
     .filter-label { font-size: .78rem; font-weight: 700; color: var(--text-2); letter-spacing: .02em; }
 
-    .post-card-link { text-decoration: none; color: inherit; display: block; }
+    .post-card-link { text-decoration: none; color: inherit; display: flex; height: 100%; }
+    .post-card-wrap { display: flex; flex-direction: column; }
     .post-card-wrap.hidden { display: none; }
     .filter-empty {
       display: none;
@@ -129,6 +130,21 @@
     <!-- 게시글 목록 -->
     <div class="section-title">📝 포스트</div>
     <div class="card-grid" id="post-grid">
+
+      <div class="post-card-wrap" data-category="가족일상">
+        <a href="posts/daily-open-class.html" class="post-card-link">
+          <div class="card">
+            <div class="card-icon">🏫</div>
+            <h3>오늘의 일상</h3>
+            <p>공개수업 날, 다른 사람의 마음을 헤아리는 법을 배웠어. 엄마 아빠랑 함께여서 좋았어! ❤️</p>
+            <div>
+              <span class="tag">공개수업</span>
+              <span class="tag">가족일상</span>
+            </div>
+            <div class="card-date">2026. 04. 21</div>
+          </div>
+        </a>
+      </div>
 
       <div class="post-card-wrap" data-category="다솜이">
         <a href="posts/parapara-character.html" class="post-card-link">
