@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collection — DASOM's Blog</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    @keyframes heroFadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content {
+      opacity: 0;
+      animation: heroFadeIn 0.7s ease forwards;
+      animation-delay: 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* 카테고리 필터 버튼 */
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .filter-btn {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: var(--sh-xs);
+    }
+    .filter-btn:hover {
+      border-color: var(--orange);
+      box-shadow: var(--sh-or);
+      transform: translateY(-2px);
+    }
+    .filter-btn.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      box-shadow: var(--sh-or);
+    }
+    .filter-btn.active .filter-icon,
+    .filter-btn.active .filter-label { color: #fff; }
+    .filter-icon {
+      font-size: 1.8rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .filter-label {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--text-2);
+      letter-spacing: .02em;
+    }
+
+    /* 게시글 카드 */
+    .post-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .post-card-wrap {
+      transition: opacity .25s, transform .25s;
+    }
+    .post-card-wrap.hidden {
+      display: none;
+    }
+
+    /* 빈 상태 */
+    .filter-empty {
+      display: none;
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-4);
+      font-size: .9rem;
+    }
+    .filter-empty .empty-icon { font-size: 2.4rem; display: block; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">PARAPARA</a></li>
+      <li><a href="family.html">Family</a></li>
+      <li><a href="travel.html">Travel</a></li>
+      <li><a href="collection.html" class="active">Collection</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <div class="deco-strip">✦ ✦ ✦ ✦ ✦</div>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-icon"><img src="banjjak.png" alt="Collection" style="width:140px;height:auto;object-fit:contain;" /></div>
+        <h1>Collection</h1>
+        <p>
+          소중히 모아온 것들의 이야기.<br />
+          사소해 보여도 나에겐 특별한 컬렉션들을 소개합니다.
+        </p>
+      </div>
+    </div>
+
+    <!-- 카테고리 필터 -->
+    <div class="section-title">🗃️ 컬렉션 목록</div>
+    <div class="filter-grid">
+      <div class="filter-btn active" data-filter="all" onclick="filterPosts(this, 'all')">
+        <span class="filter-icon">📦</span>
+        <span class="filter-label">전체</span>
+      </div>
+      <div class="filter-btn" data-filter="책" onclick="filterPosts(this, '책')">
+        <span class="filter-icon">📚</span>
+        <span class="filter-label">책 컬렉션</span>
+      </div>
+      <div class="filter-btn" data-filter="시계" onclick="filterPosts(this, '시계')">
+        <span class="filter-icon">💎</span>
+        <span class="filter-label">명품 & 시계</span>
+      </div>
+      <div class="filter-btn" data-filter="인테리어" onclick="filterPosts(this, '인테리어')">
+        <span class="filter-icon">🪴</span>
+        <span class="filter-label">인테리어 & 굿즈</span>
+      </div>
+      <div class="filter-btn" data-filter="게임" onclick="filterPosts(this, '게임')">
+        <span class="filter-icon">🎮</span>
+        <span class="filter-label">게임 컬렉션</span>
+      </div>
+      <div class="filter-btn" data-filter="호신" onclick="filterPosts(this, '호신')">
+        <span class="filter-icon">🛡️</span>
+        <span class="filter-label">생존 & 호신</span>
+      </div>
+      <div class="filter-btn" data-filter="기타" onclick="filterPosts(this, '기타')">
+        <span class="filter-icon">🗂️</span>
+        <span class="filter-label">기타 컬렉션</span>
+      </div>
+    </div>
+
+    <!-- 게시글 목록 -->
+    <div class="section-title">📝 포스트</div>
+    <div class="card-grid" id="post-grid">
+
+      <div class="filter-empty" id="filter-empty" style="display:block;">
+        <span class="empty-icon">📭</span>
+        아직 이 카테고리엔 포스트가 없어요.
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🦉 🐄 🦊 🐤</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+  <script>
+    function filterPosts(btn, filter) {
+      // 버튼 active 상태
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // 카드 필터링
+      const cards = document.querySelectorAll('.post-card-wrap');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // 빈 상태 표시
+      document.getElementById('filter-empty').style.display = visibleCount === 0 ? 'block' : 'none';
+
+      // 포스트 섹션으로 스크롤
+      document.getElementById('post-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+</html>

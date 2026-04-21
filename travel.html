@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travel — DASOM's Blog</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    @keyframes heroFadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content {
+      opacity: 0;
+      animation: heroFadeIn 0.7s ease forwards;
+      animation-delay: 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .filter-btn {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: var(--sh-xs);
+    }
+    .filter-btn:hover {
+      border-color: var(--orange);
+      box-shadow: var(--sh-or);
+      transform: translateY(-2px);
+    }
+    .filter-btn.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      box-shadow: var(--sh-or);
+    }
+    .filter-btn.active .filter-icon,
+    .filter-btn.active .filter-label { color: #fff; }
+    .filter-icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+    .filter-label { font-size: .78rem; font-weight: 700; color: var(--text-2); letter-spacing: .02em; }
+
+    .post-card-link { text-decoration: none; color: inherit; display: block; }
+    .post-card-wrap.hidden { display: none; }
+    .filter-empty {
+      display: none;
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-4);
+      font-size: .9rem;
+    }
+    .filter-empty .empty-icon { font-size: 2.4rem; display: block; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">PARAPARA</a></li>
+      <li><a href="family.html">Family</a></li>
+      <li><a href="travel.html" class="active">Travel</a></li>
+      <li><a href="collection.html">Collection</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <div class="deco-strip">✦ ✦ ✦ ✦ ✦</div>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-icon"><img src="bihang.png" alt="Travel" style="width:140px;height:auto;object-fit:contain;" /></div>
+        <h1>Travel</h1>
+        <p>
+          떠난 곳들, 만난 풍경들, 느꼈던 감정들.<br />
+          발길이 닿은 모든 곳의 이야기를 담습니다.
+        </p>
+      </div>
+    </div>
+
+    <!-- 카테고리 필터 -->
+    <div class="section-title">🗺️ 여행 기록</div>
+    <div class="filter-grid">
+      <div class="filter-btn active" data-filter="all" onclick="filterPosts(this, 'all')">
+        <span class="filter-icon">✈️</span>
+        <span class="filter-label">전체</span>
+      </div>
+      <div class="filter-btn" data-filter="국내" onclick="filterPosts(this, '국내')">
+        <span class="filter-icon">🏔️</span>
+        <span class="filter-label">국내 여행</span>
+      </div>
+      <div class="filter-btn" data-filter="해외" onclick="filterPosts(this, '해외')">
+        <span class="filter-icon">🌏</span>
+        <span class="filter-label">해외 여행</span>
+      </div>
+      <div class="filter-btn" data-filter="맛집" onclick="filterPosts(this, '맛집')">
+        <span class="filter-icon">🍜</span>
+        <span class="filter-label">여행지 맛집</span>
+      </div>
+      <div class="filter-btn" data-filter="사진" onclick="filterPosts(this, '사진')">
+        <span class="filter-icon">📸</span>
+        <span class="filter-label">여행 사진첩</span>
+      </div>
+      <div class="filter-btn" data-filter="숙소" onclick="filterPosts(this, '숙소')">
+        <span class="filter-icon">🏨</span>
+        <span class="filter-label">숙소 이야기</span>
+      </div>
+      <div class="filter-btn" data-filter="팁" onclick="filterPosts(this, '팁')">
+        <span class="filter-icon">🗓️</span>
+        <span class="filter-label">여행 준비 팁</span>
+      </div>
+    </div>
+
+    <!-- 게시글 목록 -->
+    <div class="section-title">📝 포스트</div>
+    <div class="card-grid" id="post-grid">
+
+      <div class="filter-empty" id="filter-empty" style="display:block;">
+        <span class="empty-icon">🧳</span>
+        아직 업로드된 여행 기록이 없어요.<br />곧 멋진 여행 이야기로 채워질 예정이에요 ✨
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🦉 🐄 🦊 🐤</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+  <script>
+    function filterPosts(btn, filter) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.post-card-wrap');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('filter-empty').style.display = visibleCount === 0 ? 'block' : 'none';
+
+      // 포스트 섹션으로 스크롤
+      document.getElementById('post-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+</html>

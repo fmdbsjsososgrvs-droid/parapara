@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guestbook — DASOM's Blog</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── 방명록 폼 ── */
+    .gb-form-wrap {
+      background: var(--orange-lt);
+      border: 1px solid rgba(247,147,26,.2);
+      border-radius: var(--r);
+      padding: 36px 40px;
+      margin-bottom: 40px;
+      box-shadow: var(--sh-sm);
+    }
+    .gb-form-title {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--text-4);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .gb-form-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-lt);
+    }
+    .gb-field { margin-bottom: 16px; }
+    .gb-field label {
+      display: block;
+      font-size: .73rem;
+      font-weight: 700;
+      color: var(--text-3);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+    .gb-field input,
+    .gb-field textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 11px 16px;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: .88rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      resize: vertical;
+    }
+    .gb-field input:focus,
+    .gb-field textarea:focus {
+      border-color: var(--orange);
+      background: var(--bg);
+      box-shadow: 0 0 0 3px var(--orange-glow);
+    }
+    .gb-field textarea { min-height: 100px; resize: none; }
+    .gb-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* 이미지 업로드 */
+    .upload-area {
+      border: 1.5px dashed var(--border);
+      border-radius: var(--r-sm);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      background: var(--surface);
+    }
+    .upload-area:hover { border-color: var(--orange); background: var(--orange-lt); }
+    .upload-area.has-image { border-style: solid; border-color: var(--orange); }
+    .upload-label { font-size: .82rem; color: var(--text-3); display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .img-preview { display: none; max-width: 100%; max-height: 200px; border-radius: var(--r-xs); margin-top: 12px; object-fit: contain; }
+    .img-preview.visible { display: block; margin: 12px auto 0; }
+    .img-remove { display: none; margin-top: 8px; font-size: .78rem; color: var(--rose); cursor: pointer; font-weight: 600; }
+    .img-remove.visible { display: inline-block; }
+
+    /* 폼 하단 */
+    .gb-form-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .char-count { font-size: .78rem; color: var(--text-4); font-weight: 500; }
+    .form-msg { font-size: .82rem; color: var(--teal); margin-top: 10px; font-weight: 600; min-height: 20px; }
+    .form-msg.error { color: var(--rose); }
+
+    /* ── 엔트리 목록 ── */
+    .entries-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .entries-label { font-size: .78rem; font-weight: 700; color: var(--text-3); letter-spacing: .1em; text-transform: uppercase; }
+    .entries-count { font-size: .75rem; font-weight: 700; color: var(--orange); background: var(--orange-lt); border: 1px solid rgba(247,147,26,.2); border-radius: 20px; padding: 3px 12px; }
+
+    .entries-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 56px; }
+
+    /* 엔트리 카드 */
+    .entry {
+      background: var(--bg);
+      border: 1px solid var(--border-lt);
+      border-radius: var(--r-sm);
+      padding: 24px 28px;
+      box-shadow: var(--sh-xs);
+      transition: box-shadow .2s, border-color .2s;
+    }
+    .entry:hover { box-shadow: var(--sh-sm); border-color: var(--border); }
+
+    .entry-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .entry-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--orange-lt);
+      border: 2px solid rgba(247,147,26,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; font-weight: 700; color: var(--orange-dk);
+      flex-shrink: 0;
+    }
+    .entry-info { flex: 1; }
+    .entry-name { font-size: .9rem; font-weight: 700; color: var(--text); }
+    .entry-time { font-size: .73rem; color: var(--text-4); margin-top: 2px; display: block; }
+    .entry-index { font-size: .7rem; font-weight: 700; color: var(--text-4); background: var(--surface); border: 1px solid var(--border-lt); border-radius: 6px; padding: 3px 8px; }
+    .entry-msg { font-size: .9rem; color: var(--text-2); line-height: 1.75; word-break: break-word; margin-bottom: 12px; }
+    .entry-img { width: 100%; max-height: 280px; object-fit: contain; border-radius: var(--r-xs); border: 1px solid var(--border-lt); margin-top: 8px; margin-bottom: 12px; background: var(--surface); }
+
+    /* 삭제 */
+    .entry-delete-btn { font-size: .72rem; color: var(--text-4); background: none; border: 1px solid var(--border-lt); border-radius: 6px; padding: 4px 10px; cursor: pointer; transition: color .2s, border-color .2s; font-family: 'Noto Sans KR', sans-serif; }
+    .entry-delete-btn:hover { color: var(--rose); border-color: var(--rose); }
+    .entry-delete-wrap { display: none; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .entry-delete-wrap.open { display: flex; }
+    .entry-delete-input { border: 1.5px solid var(--border); border-radius: var(--r-xs); padding: 6px 12px; font-size: .82rem; font-family: 'Noto Sans KR', sans-serif; outline: none; background: var(--surface); color: var(--text); transition: border-color .2s; }
+    .entry-delete-input:focus { border-color: var(--orange); }
+    .entry-delete-confirm { background: var(--rose); color: #fff; border: none; border-radius: var(--r-xs); padding: 6px 14px; font-size: .8rem; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+    .entry-delete-cancel { background: none; color: var(--text-3); border: 1px solid var(--border); border-radius: var(--r-xs); padding: 6px 14px; font-size: .8rem; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; }
+    .entry-delete-msg { font-size: .75rem; color: var(--rose); margin-top: 4px; min-height: 14px; width: 100%; }
+
+    /* 댓글 */
+    .comment-toggle-btn { font-size: .75rem; color: var(--text-4); background: none; border: none; padding: 0; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; font-weight: 600; margin-top: 10px; display: inline-block; transition: color .2s; }
+    .comment-toggle-btn:hover { color: var(--orange); }
+    .comments-section { display: none; margin-top: 16px; border-top: 1px solid var(--border-lt); padding-top: 16px; }
+    .comments-section.open { display: block; }
+    .comment-item { padding: 12px 0; border-bottom: 1px solid var(--border-lt); }
+    .comment-item:last-of-type { border-bottom: none; }
+    .comment-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+    .comment-name { font-size: .82rem; font-weight: 700; color: var(--orange-dk); }
+    .comment-time { font-size: .72rem; color: var(--text-4); }
+    .comment-msg { font-size: .86rem; color: var(--text-2); line-height: 1.6; word-break: break-word; }
+    .no-comments { font-size: .82rem; color: var(--text-4); padding: 8px 0; }
+    .comment-form { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .comment-form input,
+    .comment-form textarea { width: 100%; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--r-xs); padding: 9px 14px; font-family: 'Noto Sans KR', sans-serif; font-size: .85rem; color: var(--text); outline: none; transition: border-color .2s; resize: none; }
+    .comment-form input:focus,
+    .comment-form textarea:focus { border-color: var(--orange); }
+    .comment-submit { align-self: flex-end; background: var(--text); color: #fff; border: none; border-radius: var(--r-xs); padding: 8px 20px; font-size: .82rem; font-weight: 700; cursor: pointer; font-family: 'Noto Sans KR', sans-serif; transition: background .2s; }
+    .comment-submit:hover { background: var(--orange); }
+
+    /* 로딩 / 빈 상태 */
+    .gb-loading, .gb-empty { text-align: center; padding: 56px 24px; color: var(--text-4); font-size: .9rem; line-height: 2; }
+    .gb-empty-icon { font-size: 2.4rem; display: block; margin-bottom: 12px; }
+
+    @media (max-width: 600px) {
+      .gb-form-wrap { padding: 24px 20px; }
+      .gb-form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">PARAPARA</a></li>
+      <li><a href="family.html">Family</a></li>
+      <li><a href="travel.html">Travel</a></li>
+      <li><a href="collection.html">Collection</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <div class="deco-strip">✦ ✦ ✦ ✦ ✦</div>
+
+    <div class="hero"><div class="hero-corner-br"></div>
+      <div class="hero-icon">✉️</div>
+      <h1>Guestbook</h1>
+      <p>
+        방문 기념으로 메시지를 남겨주세요 🦉
+      </p>
+    </div>
+
+    <!-- 작성 폼 -->
+    <div class="section-title">✏️ 메시지 남기기</div>
+    <div class="gb-form-wrap">
+      <div class="gb-form-title">NEW ENTRY</div>
+
+      <div class="gb-form-row">
+        <div class="gb-field">
+          <label>이름</label>
+          <input type="text" id="inputName" maxlength="30" placeholder="Anonymous" autocomplete="off" />
+        </div>
+        <div class="gb-field">
+          <label>비밀번호 <span style="color:var(--text-4);font-weight:400;font-size:.7rem;">(삭제 시 필요)</span></label>
+          <input type="password" id="inputPw" maxlength="50" placeholder="비밀번호를 설정하세요" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="gb-field">
+        <label>메시지</label>
+        <textarea id="inputMsg" maxlength="300" placeholder="메시지를 남겨주세요..."></textarea>
+      </div>
+
+      <div class="gb-field">
+        <label>이미지 <span style="color:var(--text-4);font-weight:400;font-size:.7rem;">(선택, 5MB 이하)</span></label>
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('inputImg').click()">
+          <div class="upload-label">📎 클릭해서 이미지 업로드</div>
+          <img class="img-preview" id="imgPreview" alt="preview" />
+          <span class="img-remove" id="imgRemove" onclick="removeImage(event)">✕ 이미지 제거</span>
+        </div>
+        <input type="file" id="inputImg" accept="image/*" style="display:none" />
+      </div>
+
+      <div class="gb-form-footer">
+        <span class="char-count" id="charCount">0 / 300</span>
+        <button class="btn" id="btnSubmit">메시지 남기기 →</button>
+      </div>
+      <div class="form-msg" id="formMsg"></div>
+    </div>
+
+    <!-- 엔트리 목록 -->
+    <div class="entries-header">
+      <span class="entries-label">💬 방명록</span>
+      <span class="entries-count" id="entriesCount"></span>
+    </div>
+
+    <div class="entries-list" id="entriesList">
+      <div class="gb-loading">⏳ 불러오는 중...</div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🦉 🐄 🦊 🐤</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVV1xvAGMvruyGRhSUK7kMRRNVeZs6HVk",
+      authDomain: "owlbutler.firebaseapp.com",
+      projectId: "owlbutler",
+      storageBucket: "owlbutler.firebasestorage.app",
+      messagingSenderId: "855237503888",
+      appId: "1:855237503888:web:46d78149d540bb5fc06115"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+    const ADMIN_PW = 'techdevice2465@';
+
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    const inputName    = document.getElementById('inputName');
+    const inputPw      = document.getElementById('inputPw');
+    const inputMsg     = document.getElementById('inputMsg');
+    const inputImg     = document.getElementById('inputImg');
+    const imgPreview   = document.getElementById('imgPreview');
+    const imgRemove    = document.getElementById('imgRemove');
+    const uploadArea   = document.getElementById('uploadArea');
+    const btnSubmit    = document.getElementById('btnSubmit');
+    const formMsg      = document.getElementById('formMsg');
+    const charCount    = document.getElementById('charCount');
+    const entriesList  = document.getElementById('entriesList');
+    const entriesCount = document.getElementById('entriesCount');
+
+    inputMsg.addEventListener('input', () => {
+      charCount.textContent = `${inputMsg.value.length} / 300`;
+    });
+
+    inputImg.addEventListener('change', () => {
+      const file = inputImg.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) {
+        showMsg('이미지는 5MB 이하만 업로드 가능합니다.', true);
+        inputImg.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imgPreview.src = e.target.result;
+        imgPreview.classList.add('visible');
+        imgRemove.classList.add('visible');
+        uploadArea.classList.add('has-image');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    window.removeImage = (e) => {
+      e.stopPropagation();
+      inputImg.value = '';
+      imgPreview.src = '';
+      imgPreview.classList.remove('visible');
+      imgRemove.classList.remove('visible');
+      uploadArea.classList.remove('has-image');
+    };
+
+    btnSubmit.addEventListener('click', async () => {
+      const name = inputName.value.trim() || 'Anonymous';
+      const pw   = inputPw.value;
+      const msg  = inputMsg.value.trim();
+
+      if (!msg) { showMsg('메시지를 입력해주세요.', true); inputMsg.focus(); return; }
+      if (!pw)  { showMsg('비밀번호를 입력해주세요.', true); inputPw.focus(); return; }
+
+      btnSubmit.disabled = true;
+      showMsg('');
+
+      try {
+        const passwordHash = await sha256(pw);
+        const imageData = imgPreview.src && imgPreview.classList.contains('visible') ? imgPreview.src : null;
+
+        await addDoc(collection(db, 'guestbook'), {
+          name,
+          message: msg,
+          passwordHash,
+          ...(imageData && { imageUrl: imageData }),
+          createdAt: serverTimestamp()
+        });
+
+        inputMsg.value = '';
+        inputPw.value  = '';
+        charCount.textContent = '0 / 300';
+        window.removeImage({ stopPropagation: () => {} });
+        showMsg('메시지가 등록됐어요! 🎉');
+        setTimeout(() => showMsg(''), 3000);
+      } catch (e) {
+        showMsg('오류가 발생했습니다. 다시 시도해주세요.', true);
+        console.error(e);
+      } finally {
+        btnSubmit.disabled = false;
+      }
+    });
+
+    function showMsg(text, isError = false) {
+      formMsg.textContent = text;
+      formMsg.className = 'form-msg' + (isError ? ' error' : '');
+    }
+
+    const q = query(collection(db, 'guestbook'), orderBy('createdAt', 'desc'));
+
+    onSnapshot(q, (snapshot) => {
+      const docs = snapshot.docs;
+      entriesCount.textContent = `${docs.length}개`;
+
+      if (docs.length === 0) {
+        entriesList.innerHTML = '<div class="gb-empty"><span class="gb-empty-icon">📭</span>아직 메시지가 없어요.<br />첫 번째 메시지를 남겨주세요!</div>';
+        return;
+      }
+
+      entriesList.innerHTML = '';
+      docs.forEach((docSnap, i) => {
+        const docId   = docSnap.id;
+        const data    = docSnap.data();
+        const date    = data.createdAt?.toDate?.() ?? new Date();
+        const initial = (data.name || 'A')[0].toUpperCase();
+
+        const el = document.createElement('div');
+        el.className = 'entry';
+
+        // meta
+        const meta = document.createElement('div');
+        meta.className = 'entry-meta';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'entry-avatar';
+        avatar.textContent = initial;
+
+        const info = document.createElement('div');
+        info.className = 'entry-info';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'entry-name';
+        nameEl.textContent = data.name || 'Anonymous';
+
+        const timeEl = document.createElement('span');
+        timeEl.className = 'entry-time';
+        timeEl.textContent = formatDate(date);
+
+        const indexEl = document.createElement('span');
+        indexEl.className = 'entry-index';
+        indexEl.textContent = `#${String(docs.length - i).padStart(3, '0')}`;
+
+        info.appendChild(nameEl);
+        info.appendChild(timeEl);
+        meta.appendChild(avatar);
+        meta.appendChild(info);
+        meta.appendChild(indexEl);
+
+        const msgEl = document.createElement('div');
+        msgEl.className = 'entry-msg';
+        msgEl.textContent = data.message;
+
+        el.appendChild(meta);
+        el.appendChild(msgEl);
+
+        if (data.imageUrl) {
+          const imgEl = document.createElement('img');
+          imgEl.className = 'entry-img';
+          imgEl.src = data.imageUrl;
+          imgEl.alt = `${data.name}'s image`;
+          el.appendChild(imgEl);
+        }
+
+        // 삭제
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'entry-delete-btn';
+        deleteBtn.textContent = '삭제';
+
+        const deleteWrap = document.createElement('div');
+        deleteWrap.className = 'entry-delete-wrap';
+
+        const deleteInput = document.createElement('input');
+        deleteInput.type = 'password';
+        deleteInput.className = 'entry-delete-input';
+        deleteInput.placeholder = '비밀번호 입력';
+
+        const deleteConfirm = document.createElement('button');
+        deleteConfirm.className = 'entry-delete-confirm';
+        deleteConfirm.textContent = '삭제 확인';
+
+        const deleteCancel = document.createElement('button');
+        deleteCancel.className = 'entry-delete-cancel';
+        deleteCancel.textContent = '취소';
+
+        const deleteMsg = document.createElement('div');
+        deleteMsg.className = 'entry-delete-msg';
+
+        deleteWrap.appendChild(deleteInput);
+        deleteWrap.appendChild(deleteConfirm);
+        deleteWrap.appendChild(deleteCancel);
+        deleteWrap.appendChild(deleteMsg);
+
+        deleteBtn.addEventListener('click', () => {
+          deleteWrap.classList.toggle('open');
+          if (deleteWrap.classList.contains('open')) deleteInput.focus();
+        });
+
+        deleteCancel.addEventListener('click', () => {
+          deleteWrap.classList.remove('open');
+          deleteInput.value = '';
+          deleteMsg.textContent = '';
+        });
+
+        deleteConfirm.addEventListener('click', async () => {
+          const pw = deleteInput.value;
+          if (!pw) { deleteMsg.textContent = '비밀번호를 입력하세요.'; return; }
+          const hash = await sha256(pw);
+          const adminHash = await sha256(ADMIN_PW);
+          if (hash === data.passwordHash || hash === adminHash) {
+            try { await deleteDoc(doc(db, 'guestbook', docId)); }
+            catch (e) { deleteMsg.textContent = '삭제 실패. 잠시 후 다시 시도하세요.'; console.error(e); }
+          } else {
+            deleteMsg.textContent = '비밀번호가 올바르지 않습니다.';
+          }
+        });
+
+        el.appendChild(deleteBtn);
+        el.appendChild(deleteWrap);
+
+        // 댓글
+        const commentToggle = document.createElement('button');
+        commentToggle.className = 'comment-toggle-btn';
+        commentToggle.textContent = '💬 댓글 보기';
+
+        const commentsSection = document.createElement('div');
+        commentsSection.className = 'comments-section';
+
+        const commentList = document.createElement('div');
+
+        const commentForm = document.createElement('div');
+        commentForm.className = 'comment-form';
+
+        const cInputName = document.createElement('input');
+        cInputName.type = 'text';
+        cInputName.placeholder = '이름 (선택)';
+        cInputName.maxLength = 30;
+
+        const cInputMsg = document.createElement('textarea');
+        cInputMsg.placeholder = '댓글을 입력하세요...';
+        cInputMsg.maxLength = 200;
+        cInputMsg.rows = 2;
+
+        const cSubmit = document.createElement('button');
+        cSubmit.className = 'comment-submit';
+        cSubmit.textContent = '댓글 등록';
+
+        commentForm.appendChild(cInputName);
+        commentForm.appendChild(cInputMsg);
+        commentForm.appendChild(cSubmit);
+
+        commentsSection.appendChild(commentList);
+        commentsSection.appendChild(commentForm);
+
+        let commentsLoaded = false;
+
+        async function loadComments() {
+          const cQuery = query(collection(db, 'guestbook', docId, 'comments'), orderBy('createdAt', 'asc'));
+          const snap = await getDocs(cQuery);
+          commentList.innerHTML = '';
+          if (snap.empty) {
+            const noC = document.createElement('div');
+            noC.className = 'no-comments';
+            noC.textContent = '아직 댓글이 없어요.';
+            commentList.appendChild(noC);
+          } else {
+            snap.forEach(cs => {
+              const cd    = cs.data();
+              const cDate = cd.createdAt?.toDate?.() ?? new Date();
+              const cItem = document.createElement('div');
+              cItem.className = 'comment-item';
+              const cMeta = document.createElement('div');
+              cMeta.className = 'comment-meta';
+              const cName = document.createElement('span');
+              cName.className = 'comment-name';
+              cName.textContent = cd.name || 'Anonymous';
+              const cTime = document.createElement('span');
+              cTime.className = 'comment-time';
+              cTime.textContent = formatDate(cDate);
+              cMeta.appendChild(cName);
+              cMeta.appendChild(cTime);
+              const cMsg = document.createElement('div');
+              cMsg.className = 'comment-msg';
+              cMsg.textContent = cd.message;
+              cItem.appendChild(cMeta);
+              cItem.appendChild(cMsg);
+              commentList.appendChild(cItem);
+            });
+          }
+          commentToggle.textContent = commentsSection.classList.contains('open')
+            ? `💬 댓글 ${snap.size}개 접기`
+            : `💬 댓글 ${snap.size}개`;
+        }
+
+        commentToggle.addEventListener('click', async () => {
+          commentsSection.classList.toggle('open');
+          if (commentsSection.classList.contains('open') && !commentsLoaded) {
+            commentsLoaded = true;
+            await loadComments();
+          }
+        });
+
+        cSubmit.addEventListener('click', async () => {
+          const cMsg = cInputMsg.value.trim();
+          if (!cMsg) return;
+          cSubmit.disabled = true;
+          try {
+            await addDoc(collection(db, 'guestbook', docId, 'comments'), {
+              name: cInputName.value.trim() || 'Anonymous',
+              message: cMsg,
+              createdAt: serverTimestamp()
+            });
+            cInputName.value = '';
+            cInputMsg.value  = '';
+            commentsLoaded = true;
+            await loadComments();
+            if (!commentsSection.classList.contains('open')) commentsSection.classList.add('open');
+          } catch(e) {
+            console.error(e);
+          } finally {
+            cSubmit.disabled = false;
+          }
+        });
+
+        el.appendChild(commentToggle);
+        el.appendChild(commentsSection);
+        entriesList.appendChild(el);
+      });
+    }, (err) => {
+      entriesList.innerHTML = '<div class="gb-empty"><span class="gb-empty-icon">⚠️</span>데이터를 불러올 수 없습니다.</div>';
+      console.error(err);
+    });
+
+    function formatDate(date) {
+      const y   = date.getFullYear();
+      const m   = String(date.getMonth() + 1).padStart(2, '0');
+      const d   = String(date.getDate()).padStart(2, '0');
+      const h   = String(date.getHours()).padStart(2, '0');
+      const min = String(date.getMinutes()).padStart(2, '0');
+      return `${y}.${m}.${d} ${h}:${min}`;
+    }
+  </script>
+
+</body>
+</html>

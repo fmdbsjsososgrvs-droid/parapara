@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Family — DASOM's Blog</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .filter-btn {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-sm);
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: var(--sh-xs);
+    }
+    .filter-btn:hover {
+      border-color: var(--orange);
+      box-shadow: var(--sh-or);
+      transform: translateY(-2px);
+    }
+    .filter-btn.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      box-shadow: var(--sh-or);
+    }
+    .filter-btn.active .filter-icon,
+    .filter-btn.active .filter-label { color: #fff; }
+    .filter-icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+    .filter-label { font-size: .78rem; font-weight: 700; color: var(--text-2); letter-spacing: .02em; }
+
+    .post-card-link { text-decoration: none; color: inherit; display: block; }
+    .post-card-wrap.hidden { display: none; }
+    .filter-empty {
+      display: none;
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-4);
+      font-size: .9rem;
+    }
+    .filter-empty .empty-icon { font-size: 2.4rem; display: block; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">PARAPARA</a></li>
+      <li><a href="family.html" class="active">Family</a></li>
+      <li><a href="travel.html">Travel</a></li>
+      <li><a href="collection.html">Collection</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <div class="deco-strip">✦ ✦ ✦ ✦ ✦</div>
+
+    <div class="hero"><div class="hero-corner-br"></div>
+      <div class="hero-icon"><img src="slip.png" alt="Family" style="width:140px;height:auto;object-fit:contain;" /></div>
+      <h1>Family</h1>
+      <p>
+        딸바보 부엉집사의 가족 이야기.<br />
+        소중한 일상의 기록들을 담습니다.
+      </p>
+    </div>
+
+    <!-- 카테고리 필터 -->
+    <div class="section-title">🏠 카테고리</div>
+    <div class="filter-grid">
+      <div class="filter-btn active" data-filter="all" onclick="filterPosts(this, 'all')">
+        <span class="filter-icon">👨‍👩‍👧</span>
+        <span class="filter-label">전체</span>
+      </div>
+      <div class="filter-btn" data-filter="엄마아빠" onclick="filterPosts(this, '엄마아빠')">
+        <span class="filter-icon">💑</span>
+        <span class="filter-label">엄마아빠</span>
+      </div>
+      <div class="filter-btn" data-filter="다솜이" onclick="filterPosts(this, '다솜이')">
+        <span class="filter-icon">👧</span>
+        <span class="filter-label">다솜이</span>
+      </div>
+      <div class="filter-btn" data-filter="가족일상" onclick="filterPosts(this, '가족일상')">
+        <span class="filter-icon">🏡</span>
+        <span class="filter-label">가족일상</span>
+      </div>
+      <div class="filter-btn" data-filter="가족여행" onclick="filterPosts(this, '가족여행')">
+        <span class="filter-icon">🚗</span>
+        <span class="filter-label">가족여행</span>
+      </div>
+      <div class="filter-btn" data-filter="기념일" onclick="filterPosts(this, '기념일')">
+        <span class="filter-icon">🎂</span>
+        <span class="filter-label">기념일</span>
+      </div>
+    </div>
+
+    <!-- 게시글 목록 -->
+    <div class="section-title">📝 포스트</div>
+    <div class="card-grid" id="post-grid">
+
+      <div class="post-card-wrap" data-category="다솜이">
+        <a href="posts/parapara-character.html" class="post-card-link">
+          <div class="card">
+            <div class="card-icon">🐦</div>
+            <h3>다솜이의 캐릭터 - 파라파라!</h3>
+            <p>극락조를 컨셉으로 만든 다솜이의 부캐, 파라파라를 소개합니다 ❤️</p>
+            <div>
+              <span class="tag">파라파라</span>
+              <span class="tag">캐릭터</span>
+              <span class="tag">극락조</span>
+            </div>
+            <div class="card-date">2026. 04. 21</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="filter-empty" id="filter-empty" style="display:none;">
+        <span class="empty-icon">👨‍👩‍👧</span>
+        아직 작성된 글이 없어요.<br />소중한 가족 이야기로 곧 채워질 예정이에요 🌟
+      </div>
+
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🦉 🐄 🦊 🐤</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+  <script>
+    function filterPosts(btn, filter) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.post-card-wrap');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.category === filter) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      document.getElementById('filter-empty').style.display = visibleCount === 0 ? 'block' : 'none';
+
+      // 포스트 섹션으로 스크롤
+      document.getElementById('post-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+</html>
