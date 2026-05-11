@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>동물원에 다녀왔어! — DASOM's Blog</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    @font-face {
+      font-family: '온글잎 룡룡';
+      src: local('온글잎 룡룡');
+    }
+
+    .diary-wrap {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+    }
+
+    .diary-date {
+      display: inline-block;
+      background: #fff9c4;
+      border: 2px dashed #f9c846;
+      border-radius: 12px;
+      padding: 8px 20px;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1rem;
+      color: #b58a00;
+      margin-bottom: 28px;
+      box-shadow: 2px 3px 0 #f9c84655;
+      letter-spacing: .05em;
+    }
+
+    .diary-note {
+      background: #fffdf5;
+      border: 2.5px solid #e8dfc8;
+      border-radius: 18px;
+      padding: 36px 32px 36px 90px;
+      position: relative;
+      box-shadow: 4px 6px 0 #e8dfc8;
+      line-height: 2.4;
+      background-image:
+        repeating-linear-gradient(
+          transparent,
+          transparent 39px,
+          #dde8f5 39px,
+          #dde8f5 40px
+        );
+    }
+
+    .diary-note::before {
+      content: '';
+      position: absolute;
+      left: 72px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #f4b8c1;
+      border-radius: 2px;
+    }
+
+    .diary-holes {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      position: absolute;
+      left: 18px;
+      top: 30px;
+    }
+    .diary-hole {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e8dfc8;
+      border: 2px solid #d4c8b0;
+      box-shadow: inset 1px 2px 3px rgba(0,0,0,.08);
+    }
+
+    .diary-text {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.18rem;
+      color: #3a3228;
+      padding-left: 0;
+    }
+
+    .diary-text p {
+      margin: 0 0 8px 0;
+      line-height: 2.4;
+    }
+
+    .diary-img-wrap {
+      text-align: center;
+      margin: 28px 0;
+    }
+    .diary-img-wrap img {
+      border-radius: 16px;
+      border: 3px dashed #f4b8c1;
+      padding: 8px;
+      background: #fff;
+      box-shadow: 3px 4px 0 #f4b8c155;
+      max-width: 320px;
+      width: 100%;
+    }
+    .diary-img-wrap.wide img {
+      max-width: 100%;
+    }
+    .diary-img-caption {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: .88rem;
+      color: #b58a00;
+      margin-top: 8px;
+    }
+
+    .diary-callout {
+      background: #fff0f5;
+      border-left: 5px solid #f4b8c1;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.08rem;
+      color: #c0516e;
+      line-height: 2;
+    }
+
+    /* 동물 리스트 (작은 칩 모음) */
+    .animal-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 10px;
+      padding: 14px 18px;
+      background: #fff8e6;
+      border: 2px dashed #f4d870;
+      border-radius: 14px;
+    }
+    .animal-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #fff;
+      border: 1.5px solid #f0d180;
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: .98rem;
+      color: #8a6500;
+    }
+
+    .diary-ending {
+      text-align: right;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.2rem;
+      color: #e05c7a;
+      padding-top: 8px;
+    }
+
+    .post-title,
+    .post-category,
+    .post-meta-item {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif !important;
+    }
+    .post-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="../index.html">PARAPARA</a></li>
+      <li><a href="../family.html" class="active">Family</a></li>
+      <li><a href="../travel.html">Travel</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <a href="../family.html" class="post-back">목록으로</a>
+
+    <div class="post-header">
+      <span class="post-category">Family · 가족여행</span>
+      <h1 class="post-title">동물원에 다녀왔어! 🦒🦚</h1>
+      <div class="post-meta">
+        <span class="post-meta-item">🐦 DASOM</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">2026. 05. 10</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">약 2분</span>
+      </div>
+    </div>
+
+    <div class="diary-wrap">
+
+      <div class="diary-date">📅 2026년 5월 10일</div>
+
+      <div class="diary-note">
+
+        <div class="diary-holes">
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+        </div>
+
+        <div class="diary-text">
+
+          <p><strong>동물원</strong>에 가서</p>
+          <p>여러 가지 동물을 봤다! 🐾</p>
+
+          <div class="diary-img-wrap wide">
+            <img src="../image/15.jpg" alt="동물원" />
+            <div class="diary-img-caption">🦁 오늘은 동물원!</div>
+          </div>
+
+          <p>제일 인상깊었던 동물은</p>
+          <p><strong>공작</strong>이다 🦚</p>
+          <p>왜냐하면 공작이 <strong>꼬리깃을 폈는데</strong>,</p>
+          <p>실제로 처음 봐서</p>
+          <p>너무 예쁘고 신기해서 인상깊었어!</p>
+
+          <div class="diary-img-wrap wide">
+            <img src="../image/16.jpg" alt="공작" />
+            <div class="diary-img-caption">🦚 공작님 꼬리깃 자랑타임!</div>
+          </div>
+
+          <div class="diary-callout">
+            🔊 그런데...<br />
+            공작의 <strong>울음소리</strong>를 들었는데<br />
+            되게 시끄러웠다! 😵
+          </div>
+
+          <p>그리고 동물원에는</p>
+          <p><strong>곤충관</strong>이라는 곳도 있었는데</p>
+          <p>그것도 재미있었어! 🐛🦋</p>
+
+          <div class="diary-img-wrap wide">
+            <img src="../image/17.jpg" alt="곤충관" />
+            <div class="diary-img-caption">🦋 곤충관도 짱!</div>
+          </div>
+
+          <p>그 외에도 많은 동물들을 봤어 🌟</p>
+
+          <div class="animal-chips">
+            <span class="animal-chip">🦩 홍학</span>
+            <span class="animal-chip">🦏 코뿔소</span>
+            <span class="animal-chip">🐹 미어캣</span>
+            <span class="animal-chip">🦒 기린</span>
+            <span class="animal-chip">🦅 독수리</span>
+          </div>
+
+          <div class="diary-img-wrap wide">
+            <img src="../image/18.jpg" alt="동물 친구들" />
+            <div class="diary-img-caption">📸 한 컷 더!</div>
+          </div>
+
+          <div class="diary-img-wrap wide">
+            <img src="../image/19.jpg" alt="동물 친구들" />
+            <div class="diary-img-caption">📸 또 한 컷!</div>
+          </div>
+
+        </div>
+
+        <div class="diary-ending">
+          동물원 짱 재미있었어! ⭐🐾
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="post-tags">
+      <div class="post-tags-label">Tags</div>
+      <span class="tag">가족여행</span>
+      <span class="tag">동물원</span>
+      <span class="tag">공작</span>
+      <span class="tag">곤충관</span>
+      <span class="tag">가족나들이</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🐦 🌺 🐦 🌺</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+</body>
+</html>

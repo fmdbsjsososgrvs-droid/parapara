@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>아빠 생일! 호텔 뷔페 다녀왔어 — DASOM's Blog</title>
+  <link rel="stylesheet" href="../style.css" />
+  <style>
+    @font-face {
+      font-family: '온글잎 룡룡';
+      src: local('온글잎 룡룡');
+    }
+
+    .diary-wrap {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+    }
+
+    .diary-date {
+      display: inline-block;
+      background: #fff9c4;
+      border: 2px dashed #f9c846;
+      border-radius: 12px;
+      padding: 8px 20px;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1rem;
+      color: #b58a00;
+      margin-bottom: 28px;
+      box-shadow: 2px 3px 0 #f9c84655;
+      letter-spacing: .05em;
+    }
+
+    /* 음식 점수 뱃지 */
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #ff8fab, #ffb347);
+      color: #fff;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border-radius: 30px;
+      padding: 10px 26px;
+      margin: 28px 0;
+      box-shadow: 3px 3px 0 #ffb3c655;
+    }
+
+    .diary-note {
+      background: #fffdf5;
+      border: 2.5px solid #e8dfc8;
+      border-radius: 18px;
+      padding: 36px 32px 36px 90px;
+      position: relative;
+      box-shadow: 4px 6px 0 #e8dfc8;
+      line-height: 2.4;
+      background-image:
+        repeating-linear-gradient(
+          transparent,
+          transparent 39px,
+          #dde8f5 39px,
+          #dde8f5 40px
+        );
+    }
+
+    .diary-note::before {
+      content: '';
+      position: absolute;
+      left: 72px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #f4b8c1;
+      border-radius: 2px;
+    }
+
+    .diary-holes {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      position: absolute;
+      left: 18px;
+      top: 30px;
+    }
+    .diary-hole {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #e8dfc8;
+      border: 2px solid #d4c8b0;
+      box-shadow: inset 1px 2px 3px rgba(0,0,0,.08);
+    }
+
+    .diary-text {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.18rem;
+      color: #3a3228;
+      padding-left: 0;
+    }
+
+    .diary-text p {
+      margin: 0 0 8px 0;
+      line-height: 2.4;
+    }
+
+    .diary-img-wrap {
+      text-align: center;
+      margin: 28px 0;
+    }
+    .diary-img-wrap img {
+      border-radius: 16px;
+      border: 3px dashed #f4b8c1;
+      padding: 8px;
+      background: #fff;
+      box-shadow: 3px 4px 0 #f4b8c155;
+      max-width: 320px;
+      width: 100%;
+    }
+    .diary-img-wrap.wide img {
+      max-width: 100%;
+    }
+    .diary-img-caption {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: .88rem;
+      color: #b58a00;
+      margin-top: 8px;
+    }
+
+    .diary-callout {
+      background: #fff0f5;
+      border-left: 5px solid #f4b8c1;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.08rem;
+      color: #c0516e;
+      line-height: 2;
+    }
+
+    .diary-ending {
+      text-align: right;
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif;
+      font-size: 1.2rem;
+      color: #e05c7a;
+      padding-top: 8px;
+    }
+
+    .post-title,
+    .post-category,
+    .post-meta-item {
+      font-family: '온글잎 룡룡', 'Noto Sans KR', sans-serif !important;
+    }
+    .post-title {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem) !important;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-text">
+        <div class="site-title">DASOM's Blog</div>
+        <div class="site-subtitle">다솜이의 공간입니다🐦</div>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="../index.html">PARAPARA</a></li>
+      <li><a href="../family.html" class="active">Family</a></li>
+      <li><a href="../travel.html">Travel</a></li>
+      <li><a href="../collection.html">Collection</a></li>
+      <li><a href="../reviews.html">Reviews</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrap">
+
+    <a href="../family.html" class="post-back">목록으로</a>
+
+    <div class="post-header">
+      <span class="post-category">Family · 기념일</span>
+      <h1 class="post-title">아빠 생일! 호텔 뷔페 다녀왔어 🎂🍽️</h1>
+      <div class="post-meta">
+        <span class="post-meta-item">🐦 DASOM</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">2026. 05. 04</span>
+        <span class="post-meta-divider"></span>
+        <span class="post-meta-item">약 1분</span>
+      </div>
+    </div>
+
+    <div class="diary-wrap">
+
+      <div class="diary-date">📅 2026년 5월 4일 — 아빠 생일 🎉</div>
+
+      <div class="diary-note">
+
+        <div class="diary-holes">
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+          <div class="diary-hole"></div>
+        </div>
+
+        <div class="diary-text">
+
+          <p><strong>아빠의 생일</strong>을 기념하여</p>
+          <p>좋은 <strong>호텔 뷔페</strong>에 갔다! 🥂</p>
+
+          <div class="diary-img-wrap wide">
+            <img src="../image/12.jpg" alt="호텔 뷔페" />
+            <div class="diary-img-caption">🏨 좋은 호텔 뷔페!</div>
+          </div>
+
+          <p>난 음식 중에서는</p>
+          <p><strong>막대과자</strong>랑 <strong>바게트</strong>를 먹었다. 🥖</p>
+
+          <div class="diary-img-wrap wide">
+            <img src="../image/13.jpg" alt="내가 먹은 음식" />
+            <div class="diary-img-caption">😋 막대과자 + 바게트 콜라보!</div>
+          </div>
+
+          <p>그리고 아빠가 자꾸</p>
+          <p><strong>고기만 먹으라고</strong> 했다. 😑</p>
+
+          <div class="diary-callout">
+            📩 아니 분명!!<br />
+            메시지로 그러지 말라고 했는데~!!<br />
+            아빠 잔소리 그만~ 😤
+          </div>
+
+          <div class="diary-img-wrap wide">
+            <img src="../image/14.jpg" alt="아빠랑 한 컷" />
+            <div class="diary-img-caption">🥩 (아빠는 고기 추천 중)</div>
+          </div>
+
+          <p>아무튼!</p>
+          <p>음식 점수는...</p>
+
+          <div class="score-badge">🏆 음식 점수 &nbsp;— &nbsp;100점! 🎉</div>
+
+          <p>아빠 생일 축하해요~! ❤️</p>
+
+        </div>
+
+        <div class="diary-ending">
+          아빠 생일 + 호텔뷔페 = 최고! ⭐
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="post-tags">
+      <div class="post-tags-label">Tags</div>
+      <span class="tag">기념일</span>
+      <span class="tag">아빠생일</span>
+      <span class="tag">호텔뷔페</span>
+      <span class="tag">100점</span>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-deco">🐦 🌺 🐦 🌺</div>
+    © 2026 DASOM's Blog · All rights reserved
+  </footer>
+
+</body>
+</html>
